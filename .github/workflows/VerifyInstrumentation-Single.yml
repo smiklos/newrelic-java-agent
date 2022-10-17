@@ -89,7 +89,7 @@ jobs:
 
       ## Setting up java 11 again, because verify instrumentation must run with 11, but build had to run with 8
       - name: Set up Java 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: 11
