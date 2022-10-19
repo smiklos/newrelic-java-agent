@@ -16,7 +16,7 @@ on:
 
 jobs:
   verify-module:
-    name: Verify Instrumentation (${{ github.event.inputs.module || inputs.module }})
+    name: ${{ github.event.inputs.module || inputs.module }}
     runs-on: ubuntu-latest
     env:
       MODULE: ${{ github.event.inputs.module || inputs.module }}
@@ -94,5 +94,12 @@ jobs:
           distribution: 'temurin'
           java-version: 11
 
-      - name: Running verifyInstrumentation on (${{ env.MODULE }})
+      - name: Running verifyInstrumentation (${{ env.MODULE }})
         run: ./gradlew $GRADLE_OPTIONS :instrumentation:${{ env.MODULE }}:verifyInstrumentation
+
+      - name: Capture verify reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: verifyInstrumentation-${{ env.MODULE }}
+          path: |
+            **/${{ env.MODULE }}/build/verifier/*

@@ -199,5 +199,12 @@ jobs:
           distribution: 'temurin'
           java-version: 11
 
-      - name: Running verifyInstrumentation on (${{ matrix.modules }})
+      - name: Running verifyInstrumentation (${{ matrix.modules }})
         run: ./gradlew $GRADLE_OPTIONS --info :instrumentation:${{ matrix.modules }}:verifyInstrumentation
+
+      - name: Capture verify reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: verifyInstrumentation-${{ env.MODULE }}
+          path: |
+            **/${{ matrix.modules }}/build/verifier/*
