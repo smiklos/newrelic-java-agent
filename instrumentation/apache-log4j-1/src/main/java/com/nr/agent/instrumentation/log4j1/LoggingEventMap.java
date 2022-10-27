@@ -1,5 +1,7 @@
 package com.nr.agent.instrumentation.log4j1;
 
+import com.newrelic.agent.bridge.logging.AppLoggingUtils;
+import com.newrelic.agent.bridge.logging.LogAttributeKey;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
@@ -21,8 +23,8 @@ class LoggingEventMap {
     static final String LOGGER_FQCN = "logger.fqcn";
     static final String UNKNOWN = "UNKNOWN";
 
-    static Map<String, Object> from(LoggingEvent event) {
-        HashMap<String, Object> logEventMap = new HashMap<>(DEFAULT_NUM_OF_LOG_EVENT_ATTRIBUTES);
+    static Map<LogAttributeKey, Object> from(LoggingEvent event) {
+        HashMap<LogAttributeKey, Object> logEventMap = new HashMap<>(DEFAULT_NUM_OF_LOG_EVENT_ATTRIBUTES);
         String message = event.getRenderedMessage();
         Throwable throwable = null;
         ThrowableInformation throwableInformation = event.getThrowableInformation();
@@ -30,50 +32,50 @@ class LoggingEventMap {
             throwable = throwableInformation.getThrowable();
         }
         if (message != null && !message.isEmpty()) {
-            logEventMap.put(MESSAGE, message);
+            logEventMap.put(AppLoggingUtils.MESSAGE, message);
         }
-        logEventMap.put(TIMESTAMP, event.getTimeStamp());
+        logEventMap.put(AppLoggingUtils.TIMESTAMP, event.getTimeStamp());
 
         Level level = event.getLevel();
         if (level != null) {
             String levelName = level.toString();
             if (levelName.isEmpty()) {
-                logEventMap.put(LEVEL, UNKNOWN);
+                logEventMap.put(AppLoggingUtils.LEVEL, UNKNOWN);
             } else {
-                logEventMap.put(LEVEL, levelName);
+                logEventMap.put(AppLoggingUtils.LEVEL, levelName);
             }
         }
 
         String errorStack = Log4j1ExceptionUtil.getErrorStack(throwable);
         if (errorStack != null) {
-            logEventMap.put(ERROR_STACK, errorStack);
+            logEventMap.put(AppLoggingUtils.ERROR_STACK, errorStack);
         }
 
         String errorMessage = Log4j1ExceptionUtil.getErrorMessage(throwable);
         if (errorMessage != null) {
-            logEventMap.put(ERROR_MESSAGE, errorMessage);
+            logEventMap.put(AppLoggingUtils.ERROR_MESSAGE, errorMessage);
         }
 
         String errorClass = Log4j1ExceptionUtil.getErrorClass(throwable);
         if (errorClass != null) {
-            logEventMap.put(ERROR_CLASS, errorClass);
+            logEventMap.put(AppLoggingUtils.ERROR_CLASS, errorClass);
         }
 
         String threadName = event.getThreadName();
         if (threadName != null) {
-            logEventMap.put(THREAD_NAME, threadName);
+            logEventMap.put(AppLoggingUtils.THREAD_NAME, threadName);
         }
 
-        logEventMap.put(THREAD_ID, Thread.currentThread().getId());
+        logEventMap.put(AppLoggingUtils.THREAD_ID, Thread.currentThread().getId());
 
         String loggerName = event.getLoggerName();
         if (loggerName != null) {
-            logEventMap.put(LOGGER_NAME, loggerName);
+            logEventMap.put(AppLoggingUtils.LOGGER_NAME, loggerName);
         }
 
         String loggerFqcn = event.getFQNOfLoggerClass();
         if (loggerFqcn != null) {
-            logEventMap.put(LOGGER_FQCN, loggerFqcn);
+            logEventMap.put(AppLoggingUtils.LOGGER_FQCN, loggerFqcn);
         }
         return logEventMap;
     }
