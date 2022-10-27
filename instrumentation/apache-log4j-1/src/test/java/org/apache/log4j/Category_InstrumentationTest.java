@@ -1,10 +1,8 @@
-package com.nr.agent.instrumentation.log4j1;
+package org.apache.log4j;
 
 import com.newrelic.agent.introspec.InstrumentationTestConfig;
 import com.newrelic.agent.introspec.InstrumentationTestRunner;
 import com.newrelic.agent.introspec.MetricsHelper;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
